@@ -1,0 +1,3 @@
+/home/jack/Desktop/C++/parameters_esti/build/CMakeFiles/edit_cache.dir
+/home/jack/Desktop/C++/parameters_esti/build/CMakeFiles/rebuild_cache.dir
+/home/jack/Desktop/C++/parameters_esti/build/CMakeFiles/parameters_esti.dir

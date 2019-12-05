@@ -1,0 +1,3 @@
+/home/jack/Desktop/C++/getH/build/CMakeFiles/edit_cache.dir
+/home/jack/Desktop/C++/getH/build/CMakeFiles/rebuild_cache.dir
+/home/jack/Desktop/C++/getH/build/CMakeFiles/getH.dir

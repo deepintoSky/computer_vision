@@ -1,0 +1,3 @@
+/home/jack/Desktop/C++/skin_detect/build/CMakeFiles/edit_cache.dir
+/home/jack/Desktop/C++/skin_detect/build/CMakeFiles/rebuild_cache.dir
+/home/jack/Desktop/C++/skin_detect/build/CMakeFiles/skin_detect.dir

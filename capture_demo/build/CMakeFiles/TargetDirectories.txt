@@ -1,0 +1,3 @@
+/home/jack/Desktop/C++/capture_demo/build/CMakeFiles/edit_cache.dir
+/home/jack/Desktop/C++/capture_demo/build/CMakeFiles/rebuild_cache.dir
+/home/jack/Desktop/C++/capture_demo/build/CMakeFiles/capture_demo.dir
