@@ -1,0 +1,27 @@
+1:
+lm: /usr/include/eigen3/Eigen/src/Core/DenseCoeffsBase.h:353: Eigen::DenseCoeffsBase<Derived, 1>::Scalar& Eigen::DenseCoeffsBase<Derived, 1>::operator()(Eigen::Index, Eigen::Index) [with Derived = Eigen::Matrix<double, -1, -1>; Eigen::DenseCoeffsBase<Derived, 1>::Scalar = double; Eigen::Index = long int]: Assertion `row >= 0 && row < rows() && col >= 0 && col < cols()' failed.
+Aborted (core dumped)
+
+指针越界，看下标有没超出定义范围之类的
+
+
+2:
+ error: static assertion failed: THE_BRACKET_OPERATOR_IS_ONLY_FOR_VECTORS__USE_THE_PARENTHESIS_OPERATOR_INSTEAD
+     #define EIGEN_STATIC_ASSERT(X,MSG) static_assert(X,#MSG);
+
+The same error was triggered. The solution to the problem is to replace minor2x2[i] to minor2x2(i). I think finding Eigen::Matrix perhaps is helpful.//换下标
+
+
+
+3:
+/usr/include/eigen3/Eigen/src/Core/util/StaticAssert.h:119:9: error: ‘THIS_METHOD_IS_ONLY_FOR_VECTORS_OF_A_SPECIFIC_SIZE’ is not a member of ‘Eigen::internal::static_assertion<false>’
+         if (Eigen::internal::static_assertion<static_cast<bool>(CONDITION)>::MS
+
+eigen库叉乘.cross()只能用于Vector3d向量
+
+
+4:
+ error: ‘>>’ should be ‘> >’ within a nested template argument list
+  vector<vector<Point2f>> imagePoints;
+
+>与>之间要空开,  改成vector< vector<Point2f> >

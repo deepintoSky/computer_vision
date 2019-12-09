@@ -1,0 +1,3 @@
+/home/jack/Desktop/C++/stereo/build/CMakeFiles/edit_cache.dir
+/home/jack/Desktop/C++/stereo/build/CMakeFiles/rebuild_cache.dir
+/home/jack/Desktop/C++/stereo/build/CMakeFiles/stereo.dir
