@@ -6,14 +6,18 @@
 
 #IncludeRegexTransform: 
 
-/home/jack/Desktop/C++/stereo/stereo.cpp
+/home/jack/Desktop/C++/computer_vision/stereo/stereo.cpp
 iostream
 -
 opencv2/core/core.hpp
 -
 opencv2/imgproc/imgproc.hpp
 -
+opencv2/features2d.hpp
+/home/jack/Desktop/C++/computer_vision/stereo/opencv2/features2d.hpp
 opencv2/highgui/highgui.hpp
+/home/jack/Desktop/C++/computer_vision/stereo/opencv2/highgui/highgui.hpp
+vector
 -
 
 /opt/ros/kinetic/include/opencv-3.3.1-dev/opencv/cxcore.h

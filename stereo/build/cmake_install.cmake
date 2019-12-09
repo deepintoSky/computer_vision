@@ -1,4 +1,4 @@
-# Install script for directory: /home/jack/Desktop/C++/stereo
+# Install script for directory: /home/jack/Desktop/C++/computer_vision/stereo
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/jack/Desktop/C++/stereo/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/jack/Desktop/C++/computer_vision/stereo/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
