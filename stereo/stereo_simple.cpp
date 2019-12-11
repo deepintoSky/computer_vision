@@ -9,31 +9,94 @@
 using namespace std;
 using namespace cv;
 
+//像素坐标转为相机坐标
+Point2f pixel2cam(const Point2d& p, const Mat& K)
+{
+	return Point2f
+	(
+		(p.x - K.at<double>(0, 2) - K.at<double>(0, 1)*(p.y - K.at<double>(1, 2)) / K.at<double>(1, 1) ) / K.at<double>(0, 0),
+		(p.y - K.at<double>(1, 2)) / K.at<double>(1, 1)
+	);
+}
+
+//三角化测量得到世界坐标
+void triangulation(
+    bool mismatch,
+	const vector< KeyPoint >& keypoint_1,
+	const vector< KeyPoint >& keypoint_2,
+	const Mat& K1, const Mat& K2,
+	const Mat& R, const Mat& t,
+	vector< Point3d >& points)
+{
+    //由相机的旋转平移获得投影变换矩阵T1, T2
+	Mat T1 = (Mat_<float>(3, 4) <<
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0);
+	Mat T2 = (Mat_<float>(3, 4) <<
+		R.at<double>(0, 0), R.at<double>(0, 1), R.at<double>(0, 2), t.at<double>(0, 0),
+		R.at<double>(1, 0), R.at<double>(1, 1), R.at<double>(1, 2), t.at<double>(1, 0),
+		R.at<double>(2, 0), R.at<double>(2, 1), R.at<double>(2, 2), t.at<double>(2, 0)
+		);
+
+	vector<Point2f> pts_1, pts_2;
+	for (int i = 0; i< 2; i++)
+	{
+		// 像素坐标转为相机坐标
+        if(mismatch){//误匹配则把匹配点调换一下
+            pts_1.push_back(pixel2cam(keypoint_1[i].pt, K1));
+		    pts_2.push_back(pixel2cam(keypoint_2[1 - i].pt, K2));
+        }
+        else{
+            pts_1.push_back(pixel2cam(keypoint_1[i].pt, K1));
+		    pts_2.push_back(pixel2cam(keypoint_2[i].pt, K2));
+        }	
+	}
+
+	Mat pts_4d;
+	cv::triangulatePoints(T1, T2, pts_1, pts_2, pts_4d);
+
+	// 转为非齐次坐标
+	for (int i = 0; i<pts_4d.cols; i++)
+	{
+		Mat x = pts_4d.col(i);
+		x /= x.at<float>(3, 0); // 归一化
+		Point3d p(
+			x.at<float>(0, 0),
+			x.at<float>(1, 0),
+			x.at<float>(2, 0)
+		);
+		points.push_back(p);
+	}
+}
+
+
+
 
 int main(int argc, char** argv)
 {
 	Mat image_left, image_right, tempL, tempR, image_left_visial, image_right_visial;
 
-    Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7491.20599927464,	0,	0,
-                        65.8894515063429,	7491.97168906742,	0,
-                        1942.52279709139,	1497.45072963980,	1);
+    //相机标定结果
+    Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7464.9352329183,	40.4091065701,	    1818.5330168797,
+                                                0,	                7465.6081382331,	1383.8527966054,
+                                                0,	                0,	                   1);
 
-    Mat cameraMatrix_R = (Mat_<double>(3, 3) << 7351.97823087610,	0,	0,
-                        53.1795796695527,	7352.02889760308,	0,
-                        1637.89205830372,	1474.16645815975,	1);
+    Mat cameraMatrix_R = (Mat_<double>(3, 3) << 7344.34068362847,	38.5756634932,	    1582.6595267309,
+                                                0,	                7342.6530413198,	1399.9973531205,
+                                                0,	                0,	                1);
 
-    Mat rotation = (Mat_<double>(3, 3) << 0.998842, -0.0078428, -0.0474674,
-                        0.00941882, 0.99940863, 0.03307073,
-                        0.04717992, -0.0334795, 0.99832519);
+    Mat rotation = (Mat_<double>(3, 3) << 0.9992262817,	-0.0083102752,	-0.0384418682,
+                                        0.0097792163,	0.999222904,	0.0381831777,
+                                        0.0380946825,	-0.038529566,	0.998531055);
 
-    Mat translation = (Mat_<double>(3, 1) << -624.71864, 7.77449929, -68.122574);
+    Mat translation = (Mat_<double>(3, 1) << -625.2470674697,	 7.6217840851,	-61.3736062666);
     Mat R1, R2, P1, P2, Q;
-    Mat distCoeffs_L = (Mat_<double>(4, 1) << 0.196, -13, 0.02, 0.02);
-    Mat distCoeffs_R = (Mat_<double>(4, 1) << 0.3, -8.59, 0.02, 0.02);
+    Mat distCoeffs_L = (Mat_<double>(4, 1) << -0.037, -2.023, 0.017, 0.015);
+    Mat distCoeffs_R = (Mat_<double>(4, 1) << 0.07, -1.59, 0.015, 0.01);
 
-    stereoRectify(cameraMatrix_L, distCoeffs_L, cameraMatrix_R, distCoeffs_R, Size(2448, 2048), rotation, translation, R1, R2, P1, P2, Q);
-
-    cout << P1 << "\n" << P2 << "\n" << endl;
+    //stereoRectify(cameraMatrix_L, distCoeffs_L, cameraMatrix_R, distCoeffs_R, Size(2448, 2048), rotation, translation, R1, R2, P1, P2, Q);
+    //cout << P1 << "\n" << P2 << "\n" << endl;
 
 
 
@@ -44,6 +107,7 @@ int main(int argc, char** argv)
 
     for (int count = 1; count <= 8; count++)    //need change
 	{
+        //读入图片并灰度化
 		sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/left cam/%d-1.bmp", count); 
 		image_left = imread(filename, 1);
         cout << image_left.size() << endl;
@@ -53,29 +117,36 @@ int main(int argc, char** argv)
 		image_right = imread(filename, 1);   
         cvtColor(image_right, tempR, CV_RGB2GRAY);
 
+        //高斯滤波平滑
         GaussianBlur(tempL, tempL, Size(15, 15), 3, 3);
         GaussianBlur(tempR, tempR, Size(15, 15), 3, 3);
 
+        //二值化使特征突出，去除干扰
         threshold(tempL, tempL, 120, 255, THRESH_BINARY);
         threshold(tempR, tempR, 120, 255, THRESH_BINARY);
 
+        //定义BLOB分析参数
         vector<KeyPoint> keypointsL, keypointsR;  
         SimpleBlobDetector::Params params;
 
+        //二值化阈值与步长
         params.thresholdStep = 10;
         params.maxThreshold = 50;
         params.maxThreshold = 220;
         params.minRepeatability = 2;
         params.minDistBetweenBlobs = 10;
 
+        //面积阈值
         params.filterByArea = true;
         params.minArea = 5000;
         params.maxArea = 20000;  
     
+        //圆度阈值
         params.filterByCircularity = true;
         params.minCircularity = 0.8;
         params.maxCircularity = 1.0;
 
+        //凸度阈值
         params.filterByConvexity = true;
         params.minConvexity = 0.5;
         params.maxConvexity = 1.0;
@@ -92,33 +163,43 @@ int main(int argc, char** argv)
         detector->detect(blobR, keypointsR); 
         drawKeypoints(blobR, keypointsR, blobR, Scalar(255,0,0)); 
 
-        Mat worldPointEst;
-        for (int i=0; i<keypointsL.size(); i++){
+        bool mismatch = false;
+        for (int i=0; i<keypointsL.size(); i++){//打印特征点并画圆
             float X = keypointsL[i].pt.x; 
             float Y = keypointsL[i].pt.y;
-            cout << X << "\n" << Y << endl;
+            cout << Mat(Point(X, Y)) << endl;
             cout << endl;
-            circle(blobL, Point(X, Y), 40, cv::Scalar(255, 0, 0), 3);
+            circle(image_left, Point(X, Y), 40, cv::Scalar(255, 0, 0), 3);
 
             float X_R = keypointsR[i].pt.x; 
             float Y_R = keypointsR[i].pt.y;
-            cout << X_R << "\n" << Y_R << endl;
+            cout << Mat(Point(X_R, Y_R)) << endl;
             cout << endl;
-            circle(blobR, Point(X_R, Y_R), 40, cv::Scalar(255, 0, 0), 3);
+            circle(image_right, Point(X_R, Y_R), 40, cv::Scalar(255, 0, 0), 3);
 
-            triangulatePoints(P1, P2, Mat(Point(X, Y)), Mat(Point(X_R, Y_R)), worldPointEst);
-            //float X_G = worldPointEst; 
-            //float Y_G = worldPointEst.y;
-            //float Z_G = worldPointEst.z;
-            cout << worldPointEst << endl;
+            if(abs(X - X_R) >= 1000 ) mismatch = true;//若像素值差别太大则误匹配
+            else mismatch = false;
+            
             cout << endl;
 
         }
+        //三角化获得世界坐标
+        vector< Point3d > worldPointEst;
+        triangulation(mismatch, keypointsL, keypointsR, cameraMatrix_L, cameraMatrix_R, rotation.inv(), translation, worldPointEst);
+        cout << worldPointEst << "\n" << endl;
 
-        resize(blobL, image_left_visial, Size(612, 512)); 
+        //球门横向距离计算
+        float d_x = pow( (worldPointEst[0].x - worldPointEst[1].x), 2);
+        float d_y = pow( (worldPointEst[0].y - worldPointEst[1].y), 2);
+        float d_z = pow( (worldPointEst[0].z - worldPointEst[1].z), 2);
+        float d = sqrt( d_x + d_y + d_z );
+        cout << "d = " << d << "\n" << endl;
+
+        //图像尺寸缩小副本用于可视化
+        resize(image_left, image_left_visial, Size(612, 512)); 
         imshow("result_blobL", image_left_visial);
 
-		resize(blobR, image_right_visial, Size(612, 512)); 
+		resize(image_right, image_right_visial, Size(612, 512)); 
         imshow("result_blobR", image_right_visial);
         cvWaitKey(0);
     }
