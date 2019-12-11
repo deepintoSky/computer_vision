@@ -75,7 +75,7 @@ void triangulation(
 
 int main(int argc, char** argv)
 {
-	Mat image_left, image_right, tempL, tempR, image_left_visial, image_right_visial;
+	Mat image_left, image_right, tempL, tempR, ROI_tempL, ROI_tempR, image_left_visial, image_right_visial;
 
     //相机标定结果
     Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7464.9352329183,	40.4091065701,	    1818.5330168797,
@@ -169,18 +169,43 @@ int main(int argc, char** argv)
             float Y = keypointsL[i].pt.y;
             cout << Mat(Point(X, Y)) << endl;
             cout << endl;
-            circle(image_left, Point(X, Y), 40, cv::Scalar(255, 0, 0), 3);
+            //circle(image_left, Point(X, Y), 30, cv::Scalar(255, 0, 0), 3);
 
+            
             float X_R = keypointsR[i].pt.x; 
             float Y_R = keypointsR[i].pt.y;
             cout << Mat(Point(X_R, Y_R)) << endl;
             cout << endl;
-            circle(image_right, Point(X_R, Y_R), 40, cv::Scalar(255, 0, 0), 3);
+            //circle(image_right, Point(X_R, Y_R), 30, cv::Scalar(255, 0, 0), 3);
 
             if(abs(X - X_R) >= 1000 ) mismatch = true;//若像素值差别太大则误匹配
             else mismatch = false;
-            
             cout << endl;
+
+            //寻找像素几何中心
+            ROI_tempL = image_left(Rect(X-75, Y-80, 150, 160));
+            cvtColor(ROI_tempL, ROI_tempL, CV_RGB2GRAY);
+            
+            //SimpleBlobDetector::Params params_blob;
+            //params_blob.minArea = 10e3;
+            //Ptr<SimpleBlobDetector> detector_blob = SimpleBlobDetector::create(params_blob);
+
+            //vector<Point2f> centerL;
+            //findCirclesGrid(ROI_tempL, Size(1, 1), centerL, CALIB_CB_ASYMMETRIC_GRID, detector_blob);
+            //cout << centerL << endl;
+            //cout << endl;
+            imshow("ROI_tempL", ROI_tempL);
+
+
+            ROI_tempR = image_right(Rect(X_R-75, Y_R-80, 150, 160));
+            cvtColor(ROI_tempL, ROI_tempL, CV_RGB2GRAY);
+            imshow("ROI_tempR", ROI_tempR);
+            //vector<Point2f> centerR;
+            //findCirclesGrid(ROI_tempR, Size(1, 1), centerR);
+            //cout << centerR << endl;
+            //cout << endl;
+
+            
 
         }
         //三角化获得世界坐标
