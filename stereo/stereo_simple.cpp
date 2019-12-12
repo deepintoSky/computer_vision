@@ -71,11 +71,73 @@ void triangulation(
 }
 
 
+void findRealcenters(
+    const Mat& image_left, const Mat& image_right,
+     float& X,  float& Y,
+     float& X_R, float& Y_R)
+{
 
+    //寻找像素几何中心
+            vector< vector<Point> > contoursL, contoursR;
+            vector<Point> marker_contoursL, marker_contoursR;
+            Mat ROI_tempL, ROI_tempR;
+
+            ROI_tempL = image_left(Rect(X-75, Y-80, 150, 160));
+            cvtColor(ROI_tempL, ROI_tempL, CV_RGB2GRAY);
+            threshold(ROI_tempL, ROI_tempL, 120, 255, THRESH_BINARY);
+            Canny(ROI_tempL, ROI_tempL, 100, 250);
+
+            ROI_tempR = image_right(Rect(X_R-75, Y_R-80, 150, 160));
+            cvtColor(ROI_tempR, ROI_tempR, CV_RGB2GRAY);
+            threshold(ROI_tempR, ROI_tempR, 120, 255, THRESH_BINARY);
+            Canny(ROI_tempR, ROI_tempR, 100, 250);
+
+            vector<Vec4i>  hierarchy;
+            findContours(ROI_tempL, contoursL, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_NONE);//找轮廓
+            Mat imageContoursL=Mat::zeros(ROI_tempL.size(),CV_8UC1);
+
+
+            for(int i=0;i<contoursL.size();i++)
+	        {
+                drawContours(imageContoursL, contoursL, i, Scalar(255),1,8,hierarchy);//遍历每一个轮廓，并且绘制轮廓。
+                double area = contourArea(contoursL.at(i));
+                cout << "area is " << area << endl;
+                if (area > 7000) marker_contoursL = contoursL.at(i);
+            }
+            Moments mu = moments(marker_contoursL, false);
+            float dX = mu.m10/mu.m00;
+            float dY = mu.m01/mu.m00;
+            cout << "x, y is " << Mat(Point(dX, dY)) << endl;
+
+            imshow("ROI_tempL", imageContoursL);
+
+            findContours(ROI_tempR, contoursR, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_NONE);//找轮廓
+            Mat imageContoursR=Mat::zeros(ROI_tempR.size(),CV_8UC1);
+
+            for(int i=0;i<contoursR.size();i++)
+	        {
+                drawContours(imageContoursR, contoursR, i, Scalar(255),1,8,hierarchy);//遍历每一个轮廓，并且绘制轮廓。
+                double area = contourArea(contoursR.at(i));
+                cout << "area is " << area << endl;
+                if (area > 7000) marker_contoursR = contoursR.at(i);
+            }
+            Moments muR = moments(marker_contoursR, false);
+            float dX_R  = muR.m10/muR.m00;
+            float dY_R = muR.m01/muR.m00;
+            cout << "xR, yR is " << Mat(Point(dX_R, dY_R)) << endl;
+            imshow("ROI_tempR", imageContoursR);
+
+
+            X = X -75 + dX;
+            X_R = X_R -75 + dX_R;
+            Y = Y -80 + dY;
+            Y_R = Y_R -80 + dY_R;
+            
+}
 
 int main(int argc, char** argv)
 {
-	Mat image_left, image_right, tempL, tempR, ROI_tempL, ROI_tempR, image_left_visial, image_right_visial;
+	Mat image_left, image_right, tempL, tempR, image_left_visial, image_right_visial;
 
     //相机标定结果
     Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7464.9352329183,	40.4091065701,	    1818.5330168797,
@@ -167,45 +229,26 @@ int main(int argc, char** argv)
         for (int i=0; i<keypointsL.size(); i++){//打印特征点并画圆
             float X = keypointsL[i].pt.x; 
             float Y = keypointsL[i].pt.y;
-            cout << Mat(Point(X, Y)) << endl;
+            cout << "x, y is " << Mat(Point(X, Y)) << endl;
             cout << endl;
-            //circle(image_left, Point(X, Y), 30, cv::Scalar(255, 0, 0), 3);
+            circle(image_left, Point(X, Y), 30, cv::Scalar(255, 0, 0), 3);
 
             
             float X_R = keypointsR[i].pt.x; 
             float Y_R = keypointsR[i].pt.y;
             cout << Mat(Point(X_R, Y_R)) << endl;
             cout << endl;
-            //circle(image_right, Point(X_R, Y_R), 30, cv::Scalar(255, 0, 0), 3);
+            circle(image_right, Point(X_R, Y_R), 30, cv::Scalar(255, 0, 0), 3);
 
             if(abs(X - X_R) >= 1000 ) mismatch = true;//若像素值差别太大则误匹配
             else mismatch = false;
             cout << endl;
 
-            //寻找像素几何中心
-            ROI_tempL = image_left(Rect(X-75, Y-80, 150, 160));
-            cvtColor(ROI_tempL, ROI_tempL, CV_RGB2GRAY);
-            
-            //SimpleBlobDetector::Params params_blob;
-            //params_blob.minArea = 10e3;
-            //Ptr<SimpleBlobDetector> detector_blob = SimpleBlobDetector::create(params_blob);
-
-            //vector<Point2f> centerL;
-            //findCirclesGrid(ROI_tempL, Size(1, 1), centerL, CALIB_CB_ASYMMETRIC_GRID, detector_blob);
-            //cout << centerL << endl;
-            //cout << endl;
-            imshow("ROI_tempL", ROI_tempL);
-
-
-            ROI_tempR = image_right(Rect(X_R-75, Y_R-80, 150, 160));
-            cvtColor(ROI_tempL, ROI_tempL, CV_RGB2GRAY);
-            imshow("ROI_tempR", ROI_tempR);
-            //vector<Point2f> centerR;
-            //findCirclesGrid(ROI_tempR, Size(1, 1), centerR);
-            //cout << centerR << endl;
-            //cout << endl;
-
-            
+            findRealcenters(image_left, image_right, X, Y, X_R, Y_R);
+            //keypointsL[i].pt.x = X;
+            //keypointsL[i].pt.y = Y; 
+            //keypointsR[i].pt.x = X_R; 
+            //keypointsR[i].pt.y = Y_R;  
 
         }
         //三角化获得世界坐标

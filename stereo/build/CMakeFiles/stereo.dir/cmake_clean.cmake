@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/stereo.dir/stereo_simple.cpp.o"
+  "CMakeFiles/stereo.dir/stereo.cpp.o"
   "stereo.pdb"
   "stereo"
 )
