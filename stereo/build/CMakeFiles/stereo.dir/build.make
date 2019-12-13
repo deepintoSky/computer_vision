@@ -57,38 +57,38 @@ include CMakeFiles/stereo.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/stereo.dir/flags.make
 
-CMakeFiles/stereo.dir/stereo.cpp.o: CMakeFiles/stereo.dir/flags.make
-CMakeFiles/stereo.dir/stereo.cpp.o: ../stereo.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jack/Desktop/C++/computer_vision/stereo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/stereo.dir/stereo.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/stereo.dir/stereo.cpp.o -c /home/jack/Desktop/C++/computer_vision/stereo/stereo.cpp
+CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o: CMakeFiles/stereo.dir/flags.make
+CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o: ../stereo_simple_debug.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jack/Desktop/C++/computer_vision/stereo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o -c /home/jack/Desktop/C++/computer_vision/stereo/stereo_simple_debug.cpp
 
-CMakeFiles/stereo.dir/stereo.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/stereo.dir/stereo.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jack/Desktop/C++/computer_vision/stereo/stereo.cpp > CMakeFiles/stereo.dir/stereo.cpp.i
+CMakeFiles/stereo.dir/stereo_simple_debug.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/stereo.dir/stereo_simple_debug.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jack/Desktop/C++/computer_vision/stereo/stereo_simple_debug.cpp > CMakeFiles/stereo.dir/stereo_simple_debug.cpp.i
 
-CMakeFiles/stereo.dir/stereo.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/stereo.dir/stereo.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jack/Desktop/C++/computer_vision/stereo/stereo.cpp -o CMakeFiles/stereo.dir/stereo.cpp.s
+CMakeFiles/stereo.dir/stereo_simple_debug.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/stereo.dir/stereo_simple_debug.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jack/Desktop/C++/computer_vision/stereo/stereo_simple_debug.cpp -o CMakeFiles/stereo.dir/stereo_simple_debug.cpp.s
 
-CMakeFiles/stereo.dir/stereo.cpp.o.requires:
+CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o.requires:
 
-.PHONY : CMakeFiles/stereo.dir/stereo.cpp.o.requires
+.PHONY : CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o.requires
 
-CMakeFiles/stereo.dir/stereo.cpp.o.provides: CMakeFiles/stereo.dir/stereo.cpp.o.requires
-	$(MAKE) -f CMakeFiles/stereo.dir/build.make CMakeFiles/stereo.dir/stereo.cpp.o.provides.build
-.PHONY : CMakeFiles/stereo.dir/stereo.cpp.o.provides
+CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o.provides: CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o.requires
+	$(MAKE) -f CMakeFiles/stereo.dir/build.make CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o.provides.build
+.PHONY : CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o.provides
 
-CMakeFiles/stereo.dir/stereo.cpp.o.provides.build: CMakeFiles/stereo.dir/stereo.cpp.o
+CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o.provides.build: CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o
 
 
 # Object files for target stereo
 stereo_OBJECTS = \
-"CMakeFiles/stereo.dir/stereo.cpp.o"
+"CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o"
 
 # External object files for target stereo
 stereo_EXTERNAL_OBJECTS =
 
-stereo: CMakeFiles/stereo.dir/stereo.cpp.o
+stereo: CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o
 stereo: CMakeFiles/stereo.dir/build.make
 stereo: /opt/ros/kinetic/lib/x86_64-linux-gnu/libopencv_stitching3.so.3.3.1
 stereo: /opt/ros/kinetic/lib/x86_64-linux-gnu/libopencv_superres3.so.3.3.1
@@ -144,7 +144,7 @@ CMakeFiles/stereo.dir/build: stereo
 
 .PHONY : CMakeFiles/stereo.dir/build
 
-CMakeFiles/stereo.dir/requires: CMakeFiles/stereo.dir/stereo.cpp.o.requires
+CMakeFiles/stereo.dir/requires: CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o.requires
 
 .PHONY : CMakeFiles/stereo.dir/requires
 

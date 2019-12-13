@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/jack/Desktop/C++/computer_vision/stereo/stereo.cpp
+/home/jack/Desktop/C++/computer_vision/stereo/stereo_simple_debug.cpp
 iostream
 -
 opencv2/core/core.hpp

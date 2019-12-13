@@ -105,7 +105,7 @@ void findRealcenters(
     //imshow("canny边缘R", ROI_tempR);
 
 
-/************************************椭圆拟合
+//************************************椭圆拟合
 	findContours(ROI_tempL, contoursL, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
 	Mat cimageL = Mat::zeros(ROI_tempL.size(), CV_8UC3);
 
@@ -126,10 +126,10 @@ void findRealcenters(
 		if (boxL.center.x >80 || boxL.center.x < 70||boxL.center.y >85|| boxL.center.y<75)  continue;
 
 		//画出追踪出的轮廓
-		drawContours(cimageL, contoursL, (int)i, Scalar::all(255), 1, 8);
+		drawContours(ROI_tempL, contoursL, (int)i, Scalar::all(255), 1, 8);
 
 		//画出拟合的椭圆
-		ellipse(cimageL, boxL, Scalar(0, 0, 255), 1, CV_AA);
+		ellipse(ROI_tempL, boxL, Scalar(100, 0, 0), 1, CV_AA);
 		//cout << boxL.center.x<< endl;
 		//cout << boxL.center.y<< endl;
         dX = boxL.center.x;
@@ -168,10 +168,10 @@ void findRealcenters(
 		if (boxR.center.x >80 || boxR.center.x < 70||boxR.center.y >85|| boxR.center.y<75)  continue;
 
 		//画出追踪出的轮廓
-		drawContours(cimageR, contoursR, (int)i, Scalar::all(255), 1, 8);
+		drawContours(ROI_tempR, contoursR, (int)i, Scalar::all(255), 1, 8);
 
 		//画出拟合的椭圆
-		ellipse(cimageR, boxR, Scalar(0, 0, 255), 1, CV_AA);
+		ellipse(ROI_tempR, boxR, Scalar(100, 0, 0), 1, CV_AA);
 		//cout << boxR.center.x<< endl;
 		//cout << boxR.center.y<< endl;
         dX_R = boxR.center.x;
@@ -280,7 +280,7 @@ void findRealcenters(
             dY = ellipseL.center.y;
             cout << "x, y is " << Mat(Point(dX, dY)) << endl;
             imshow("ROI_tempL", image_ellipseL);
- */
+
             findContours(ROI_tempR, contoursR, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_NONE);//找轮廓
             Mat imageContoursR=Mat::zeros(ROI_tempR.size(), CV_8UC1);
 
