@@ -14,7 +14,7 @@ Point2f pixel2cam(const Point2d& p, const Mat& K)
 {
 	return Point2f
 	(
-		(p.x - K.at<double>(0, 2) - K.at<double>(0, 1)*(p.y - K.at<double>(1, 2)) / K.at<double>(1, 1) ) / K.at<double>(0, 0),
+		(p.x - K.at<double>(0, 2)) / K.at<double>(0, 0),
 		(p.y - K.at<double>(1, 2)) / K.at<double>(1, 1)
 	);
 }
@@ -149,25 +149,19 @@ int main(int argc, char** argv)
 	Mat image_left, image_right, tempL, tempR, image_left_visial, image_right_visial;
 
     //相机标定结果
-    Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7464.9352329183,	40.4091065701,	    1818.5330168797,
-                                                0,	                7465.6081382331,	1383.8527966054,
-                                                0,	                0,	                   1);
+    Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7439.1449067652,	0,	                0,
+                                                0,	                7437.6255516057,	0,
+                                                1405.886966076,	    937.3362811242,	    1);
 
-    Mat cameraMatrix_R = (Mat_<double>(3, 3) << 7344.34068362847,	38.5756634932,	    1582.6595267309,
-                                                0,	                7342.6530413198,	1399.9973531205,
-                                                0,	                0,	                1);
+    Mat cameraMatrix_R = (Mat_<double>(3, 3) << 7342.704388258,	    0,	                0,
+                                                0,	                7343.6607746441,	0,
+                                                1372.6677103634,	1081.5986501337,	1);
 
-    Mat rotation = (Mat_<double>(3, 3) << 0.9992262817,	-0.0083102752,	-0.0384418682,
-                                        0.0097792163,	0.999222904,	0.0381831777,
-                                        0.0380946825,	-0.038529566,	0.998531055);
+    Mat rotation = (Mat_<double>(3, 3) << 0.9998598444,	-0.0124996949,	-0.0111377335,
+                                        0.0130880528,	0.998432338,	0.054420302,
+                                        0.0104400362,	-0.0545584459,	0.9984559988);
 
-    Mat translation = (Mat_<double>(3, 1) << -625.2470674697,	 7.6217840851,	-61.3736062666);
-    Mat R1, R2, P1, P2, Q;
-    Mat distCoeffs_L = (Mat_<double>(4, 1) << -0.037, -2.023, 0.017, 0.015);
-    Mat distCoeffs_R = (Mat_<double>(4, 1) << 0.07, -1.59, 0.015, 0.01);
-
-    //stereoRectify(cameraMatrix_L, distCoeffs_L, cameraMatrix_R, distCoeffs_R, Size(2448, 2048), rotation, translation, R1, R2, P1, P2, Q);
-    //cout << P1 << "\n" << P2 << "\n" << endl;
+    Mat translation = (Mat_<double>(3, 1) << -626.5672011742,	7.0094879625,	-41.344391405);
 
 
 
@@ -188,28 +182,24 @@ int main(int argc, char** argv)
 		image_right = imread(filename, 1);   
         cvtColor(image_right, tempR, CV_RGB2GRAY);
 
-        equalizeHist(tempL, tempL);
-        equalizeHist(tempR, tempR);
+        //equalizeHist(tempL, tempL);
+        //equalizeHist(tempR, tempR);
 
-        //高斯滤波平滑
-        Mat BlurL = tempL.clone();
-        Mat BlurR = tempR.clone();
-        GaussianBlur(tempL, BlurL, Size(33, 33), 6, 6);
-        GaussianBlur(tempR, BlurR, Size(33, 33), 6, 6);
-        tempL =  tempL - BlurL;
-        tempR =  tempR - BlurR;
+        //CANNY边缘检测
+        Canny(tempL, tempL, 30, 70);
+        Canny(tempR, tempR, 30, 70);
         resize(tempL, image_left_visial, Size(612, 512));
         resize(tempR, image_right_visial, Size(612, 512));
-        //imshow("edgeL", image_left_visial);
-        //imshow("edgeR", image_right_visial);
+        imshow("edgeL", image_left_visial);
+        imshow("edgeR", image_right_visial);
 
         
 
         //二值化使特征突出，去除干扰
-        threshold(tempL, tempL, 5, 255, THRESH_BINARY);
-        threshold(tempR, tempR, 5, 255, THRESH_BINARY);
-        resize(tempL, image_left_visial, Size(612, 512));
-        resize(tempR, image_right_visial, Size(612, 512));
+        //threshold(tempL, tempL, 5, 255, THRESH_BINARY);
+        //threshold(tempR, tempR, 5, 255, THRESH_BINARY);
+        //resize(tempL, image_left_visial, Size(612, 512));
+        //resize(tempR, image_right_visial, Size(612, 512));
         //imshow("BINARYL", image_left_visial);
         //imshow("BINARYR", image_right_visial);
 
@@ -248,7 +238,7 @@ int main(int argc, char** argv)
 
         //三角化获得世界坐标
         vector< Point3d > worldPointEst;
-        triangulation(mismatch, keypointsL, keypointsR, cameraMatrix_L, cameraMatrix_R, rotation.inv(), translation, worldPointEst);
+        triangulation(mismatch, keypointsL, keypointsR, cameraMatrix_L.t(), cameraMatrix_R.t(), rotation.inv(), -translation, worldPointEst);
         cout << worldPointEst << "\n" << endl;
 
         Pose_analysis(worldPointEst);
