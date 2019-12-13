@@ -9,6 +9,10 @@
 using namespace std;
 using namespace cv;
 
+
+char  filename[50];
+
+
 //像素坐标转为相机坐标
 Point2f pixel2cam(const Point2d& p, const Mat& K)
 {
@@ -74,7 +78,7 @@ void triangulation(
 
 void findRealcenters(
     const Mat& image_left, const Mat& image_right,
-    const Ptr<FeatureDetector> &blobDetector,
+    const int& count,
     double& X,  double& Y,
     double& X_R, double& Y_R)
 {
@@ -129,6 +133,8 @@ void findRealcenters(
 	}
 
 	imshow("left_ellipse", cimageL);
+    sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/ellipse_roi/left_ellipse_%d.png", count);
+    imwrite(filename, cimageL);
 
     //椭圆拟合
 	findContours(ROI_tempR, contoursR, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
@@ -162,7 +168,8 @@ void findRealcenters(
 	}
 
 	imshow("right_ellipse", cimageR);
-
+    sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/ellipse_roi/right_ellipse_%d.png", count);
+    imwrite(filename, cimageR);
 
 /******************findCirclesGrid测试代码
             vector<Point2f> centersL, centersR; //this will be filled by the detected centers
@@ -347,7 +354,7 @@ int main(int argc, char** argv)
 
 
 
-    char  filename[50];
+    
 
     for (int count = 1; count <= 8; count++)    //need change
 	{
@@ -365,10 +372,28 @@ int main(int argc, char** argv)
         //高斯滤波平滑
         GaussianBlur(tempL, tempL, Size(15, 15), 3, 3);
         GaussianBlur(tempR, tempR, Size(15, 15), 3, 3);
+        resize(tempL, image_left_visial, Size(612, 512));
+        resize(tempR, image_right_visial, Size(612, 512));
+        imshow("BlurL", image_left_visial);
+        imshow("BlurR", image_right_visial);
+
+        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/Gaussian/BlurL_%d.png", count);
+        imwrite(filename, image_left_visial);
+        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/Gaussian/BlurR_%d.png", count);
+        imwrite(filename, image_right_visial);
 
         //二值化使特征突出，去除干扰
         threshold(tempL, tempL, 120, 255, THRESH_BINARY);
         threshold(tempR, tempR, 120, 255, THRESH_BINARY);
+        resize(tempL, image_left_visial, Size(612, 512));
+        resize(tempR, image_right_visial, Size(612, 512));
+        imshow("BINARYL", image_left_visial);
+        imshow("BINARYR", image_right_visial);
+
+        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/binary/BINARYL_%d.png", count);
+        imwrite(filename, image_left_visial);
+        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/binary/BINARYR_%d.png", count);
+        imwrite(filename, image_right_visial);
 
         //定义BLOB分析参数
         vector<KeyPoint> keypointsL, keypointsR;  
@@ -427,7 +452,7 @@ int main(int argc, char** argv)
             else mismatch = false;
             
 
-            findRealcenters(image_left, image_right, detector, X, Y, X_R, Y_R);
+            findRealcenters(image_left, image_right, count, X, Y, X_R, Y_R);
             cout << "real x, y is " << X << ", " <<  Y << endl;
             cout << "real xR, yR is "  <<  X_R << ", " <<  Y_R  << endl;
             cout << endl;
@@ -457,6 +482,12 @@ int main(int argc, char** argv)
 
 		resize(image_right, image_right_visial, Size(612, 512)); 
         imshow("result_blobR", image_right_visial);
+
+        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/blob/result_blobL_%d.png", count);
+        imwrite(filename, image_left_visial);
+        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/blob/result_blobR_%d.png", count);
+        imwrite(filename, image_right_visial);
+
         cvWaitKey(0);
     }
 

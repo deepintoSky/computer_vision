@@ -1,0 +1,216 @@
+1:
+	x, y is 2139.32, 1210.28
+
+	xR, yR is 2025.76, 944.354
+
+	real x, y is 2139.64, 1210.6
+	real xR, yR is 2026.53, 944.605
+
+	x, y is 468.106, 1120.16
+
+	xR, yR is 344.617, 877.236
+
+	real x, y is 468.17, 1120.48
+	real xR, yR is 345.154, 877.617
+
+	world x,y,z of B is [2979.19, 1112.95, 30217.6]
+
+	world x,y,z of A is [-3201.28, 628.649, 25394.7]
+
+	normal vetor of goal = [-4822.92, 0, 6180.46]
+
+	theta of goal = -37.9667度
+
+	distance between A and B = 7.83956m
+
+	distance between goal and camera = 27.82m
+
+
+2:
+	x, y is 1876.95, 1186.83
+
+	xR, yR is 1776.6, 921.614
+
+	real x, y is 1876.53, 1187.6
+	real xR, yR is 1777.19, 922.149
+
+	x, y is 337.222, 1116.28
+
+	xR, yR is 229.695, 872.39
+
+	real x, y is 337.404, 1116.7
+	real xR, yR is 230.372, 872.81
+
+	world x,y,z of B is [2058.6, 1088.81, 32509.7]
+
+	world x,y,z of A is [-3954.61, 662.342, 27528.7]
+
+	normal vetor of goal = [-4981.02, 0, 6013.21]
+
+	theta of goal = -39.6365度
+
+	distance between A and B = 7.80828m
+
+	distance between goal and camera = 30.0469m
+
+3:
+	x, y is 2088.86, 1126.87
+
+	xR, yR is 1984.53, 863.448
+
+	real x, y is 2089.34, 1128.17
+	real xR, yR is 1984.18, 864.906
+
+	x, y is 433.752, 1069.44
+
+	xR, yR is 327.276, 829.701
+
+	real x, y is 434.567, 1069.81
+	real xR, yR is 327.77, 830.279
+
+	world x,y,z of B is [2957.86, 827.664, 32218.2]
+
+	world x,y,z of A is [-3670.44, 508.156, 28087.3]
+
+	normal vetor of goal = [-4130.93, 0, 6628.3]
+
+	theta of goal = -31.9323度
+
+	distance between A and B = 7.81018m
+
+	distance between goal and camera = 30.1623m
+
+4:
+	x, y is 2199.78, 1080.12
+
+	xR, yR is 2090.06, 815.909
+
+	real x, y is 2200.23, 1079.94
+	real xR, yR is 2088.93, 816.438
+
+	x, y is 420.334, 1017.21
+
+	xR, yR is 313.668, 777.714
+
+	real x, y is 420.815, 1017.85
+	real xR, yR is 314.708, 778.572
+
+	world x,y,z of B is [3345.01, 608.49, 31344.5]
+
+	world x,y,z of A is [-3737.14, 311.252, 28208.4]
+
+	normal vetor of goal = [-3136.16, 0, 7082.15]
+
+	theta of goal = -23.885度
+
+	distance between A and B = 7.74547m
+
+	distance between goal and camera = 29.7806m
+
+5:
+	x, y is 2216.54, 1228.82
+
+	xR, yR is 2109.3, 964.168
+
+	real x, y is 2216.87, 1229.39
+	real xR, yR is 2109.32, 963.813
+
+	x, y is 430.793, 1207.04
+
+	xR, yR is 334.933, 965.103
+
+	real x, y is 431.868, 1207.31
+	real xR, yR is 336.24, 965.7
+
+	world x,y,z of B is [3450.75, 1250.7, 31666.9]
+
+	world x,y,z of A is [-3862.55, 1077.48, 29467.8]
+
+	normal vetor of goal = [-2199.07, 0, 7313.3]
+
+	theta of goal = -16.7358度
+
+	distance between A and B = 7.63677m
+
+	distance between goal and camera = 30.5902m
+
+6:
+	x, y is 2341.86, 1195.14
+
+	xR, yR is 228.275, 952.627
+
+	real x, y is 2342.36, 1195.14
+	real xR, yR is 229.319, 953.176
+
+	x, y is 341.941, 1193.07
+
+	xR, yR is 2214.43, 928.323
+
+	real x, y is 343.214, 1193.25
+	real xR, yR is 2214.68, 928.573
+
+	world x,y,z of B is [3527.59, 978.203, 28037.6]
+
+	world x,y,z of A is [-3763.99, 912.887, 26317.8]
+
+	normal vetor of goal = [-1719.81, 0, 7291.58]
+
+	theta of goal = -13.2714度
+
+	distance between A and B = 7.49166m
+
+	distance between goal and camera = 27.1944m
+
+7:
+	x, y is 528.387, 1288.67
+
+	xR, yR is 456.922, 1036.28
+
+	real x, y is 528.712, 1289.34
+	real xR, yR is 457.604, 1036.62
+
+	x, y is 1594.25, 1205.66
+
+	xR, yR is 1488.29, 940.2
+
+	real x, y is 1594.7, 1206.28
+	real xR, yR is 1489.34, 940.134
+
+	world x,y,z of B is [-4112.82, 1639.04, 34867.2]
+
+	world x,y,z of A is [774.07, 1093.59, 30569.2]
+
+	normal vetor of goal = [-4298, 0, -4886.89]
+
+	theta of goal = 41.3315度
+
+	distance between A and B = 6.50804m
+
+	distance between goal and camera = 32.7893m
+
+8:
+	x, y is 486.065, 1333.65
+
+	xR, yR is 425.481, 1089.61
+
+	real x, y is 489.027, 1334.02
+	real xR, yR is 425.944, 1090.3
+
+	x, y is 1554.94, 1278.7
+
+	xR, yR is 1465.67, 1021.06
+
+	real x, y is 1555.91, 1279.19
+	real xR, yR is 1466.43, 1020.89
+
+	world x,y,z of B is [-4631.78, 2009.47, 37459.8]
+
+	world x,y,z of A is [681.532, 1570.34, 34015.4]
+
+	normal vetor of goal = [-3444.43, 0, -5313.31]
+
+	theta of goal = 32.9539度
+
+	distance between A and B = 6.33209m
+
+	distance between goal and camera = 35.8368m

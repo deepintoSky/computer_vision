@@ -193,7 +193,10 @@ int main(int argc, char** argv)
         imshow("edgeL", image_left_visial);
         imshow("edgeR", image_right_visial);
 
-        
+        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/canny/edgeL_%d.png", count);
+        imwrite(filename, image_left_visial);
+        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/canny/edgeR_%d.png", count);
+        imwrite(filename, image_right_visial);
 
         //二值化使特征突出，去除干扰
         //threshold(tempL, tempL, 5, 255, THRESH_BINARY);
