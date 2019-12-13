@@ -123,32 +123,32 @@ stereo/fast:
 	$(MAKE) -f CMakeFiles/stereo.dir/build.make CMakeFiles/stereo.dir/build
 .PHONY : stereo/fast
 
-stereo_simple.o: stereo_simple.cpp.o
+stereo.o: stereo.cpp.o
 
-.PHONY : stereo_simple.o
+.PHONY : stereo.o
 
 # target to build an object file
-stereo_simple.cpp.o:
-	$(MAKE) -f CMakeFiles/stereo.dir/build.make CMakeFiles/stereo.dir/stereo_simple.cpp.o
-.PHONY : stereo_simple.cpp.o
+stereo.cpp.o:
+	$(MAKE) -f CMakeFiles/stereo.dir/build.make CMakeFiles/stereo.dir/stereo.cpp.o
+.PHONY : stereo.cpp.o
 
-stereo_simple.i: stereo_simple.cpp.i
+stereo.i: stereo.cpp.i
 
-.PHONY : stereo_simple.i
+.PHONY : stereo.i
 
 # target to preprocess a source file
-stereo_simple.cpp.i:
-	$(MAKE) -f CMakeFiles/stereo.dir/build.make CMakeFiles/stereo.dir/stereo_simple.cpp.i
-.PHONY : stereo_simple.cpp.i
+stereo.cpp.i:
+	$(MAKE) -f CMakeFiles/stereo.dir/build.make CMakeFiles/stereo.dir/stereo.cpp.i
+.PHONY : stereo.cpp.i
 
-stereo_simple.s: stereo_simple.cpp.s
+stereo.s: stereo.cpp.s
 
-.PHONY : stereo_simple.s
+.PHONY : stereo.s
 
 # target to generate assembly for a file
-stereo_simple.cpp.s:
-	$(MAKE) -f CMakeFiles/stereo.dir/build.make CMakeFiles/stereo.dir/stereo_simple.cpp.s
-.PHONY : stereo_simple.cpp.s
+stereo.cpp.s:
+	$(MAKE) -f CMakeFiles/stereo.dir/build.make CMakeFiles/stereo.dir/stereo.cpp.s
+.PHONY : stereo.cpp.s
 
 # Help Target
 help:
@@ -159,9 +159,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... stereo"
-	@echo "... stereo_simple.o"
-	@echo "... stereo_simple.i"
-	@echo "... stereo_simple.s"
+	@echo "... stereo.o"
+	@echo "... stereo.i"
+	@echo "... stereo.s"
 .PHONY : help
 
 

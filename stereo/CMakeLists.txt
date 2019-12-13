@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(stereo)
-SET(SRC_LIST stereo_simple.cpp)
+SET(SRC_LIST stereo.cpp)
 
 find_package( OpenCV REQUIRED )
 

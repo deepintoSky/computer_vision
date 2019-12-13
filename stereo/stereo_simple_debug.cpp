@@ -87,13 +87,16 @@ void findRealcenters(
     vector< vector<Point> > contoursL, contoursR;
     vector<Point> marker_contoursL, marker_contoursR;
     Mat ROI_tempL, ROI_tempR;
-    double dX, dY, dX_R, dY_R;
+    double dX, dY, dX_R, dY_R, width, height, width_R, height_R;
 
     ROI_tempL = image_left(Rect(X-75, Y-80, 150, 160));
     cvtColor(ROI_tempL, ROI_tempL, CV_RGB2GRAY);
     //threshold(ROI_tempL, ROI_tempL, 120, 255, THRESH_BINARY);
     Canny(ROI_tempL, ROI_tempL, 30, 70);
     //imshow("canny边缘L", ROI_tempL);
+    //sprintf(filename, "/home/jack/Desktop/cv_project/%d.png", count);
+    //imwrite(filename, ROI_tempL);
+
 
     ROI_tempR = image_right(Rect(X_R-75, Y_R-80, 150, 160));
     cvtColor(ROI_tempR, ROI_tempR, CV_RGB2GRAY);
@@ -101,7 +104,8 @@ void findRealcenters(
     Canny(ROI_tempR, ROI_tempR, 30, 70);
     //imshow("canny边缘R", ROI_tempR);
 
-    //椭圆拟合
+
+/************************************椭圆拟合
 	findContours(ROI_tempL, contoursL, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
 	Mat cimageL = Mat::zeros(ROI_tempL.size(), CV_8UC3);
 
@@ -130,11 +134,18 @@ void findRealcenters(
 		//cout << boxL.center.y<< endl;
         dX = boxL.center.x;
         dY = boxL.center.y;
+
+        //像素坐标平均准备
+        //width = boxL.size.width+10;
+        //height = boxL.size.height+10;
+        //ROI_tempL = image_left(Rect(X - 0.5*width, Y-0.5*height, width, height));
+        //cvtColor(ROI_tempL, ROI_tempL, CV_RGB2GRAY);
+        //threshold(ROI_tempL, ROI_tempL, 100, 255, THRESH_BINARY);
 	}
 
-	imshow("left_ellipse", cimageL);
-    sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/ellipse_roi/left_ellipse_%d.png", count);
-    imwrite(filename, cimageL);
+	imshow("left_ellipse", ROI_tempL);
+    //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/ellipse_roi/left_ellipse_%d.png", count);
+    //imwrite(filename, cimageL);
 
     //椭圆拟合
 	findContours(ROI_tempR, contoursR, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
@@ -165,11 +176,66 @@ void findRealcenters(
 		//cout << boxR.center.y<< endl;
         dX_R = boxR.center.x;
         dY_R = boxR.center.y;
+
+        //像素坐标平均准备
+        //width_R = boxR.size.width+10;
+        //height_R = boxR.size.height+10;
+        //ROI_tempR = image_right(Rect(X_R - 0.5*width_R, Y_R-0.5*height_R, width_R, height_R));
+        //cvtColor(ROI_tempR, ROI_tempR, CV_RGB2GRAY);
+        //threshold(ROI_tempR, ROI_tempR, 100, 255, THRESH_BINARY);
 	}
 
-	imshow("right_ellipse", cimageR);
-    sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/ellipse_roi/right_ellipse_%d.png", count);
-    imwrite(filename, cimageR);
+	imshow("right_ellipse", ROI_tempR);
+    //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/ellipse_roi/right_ellipse_%d.png", count);
+    //imwrite(filename, cimageR);
+
+//******************************************/
+
+//像素坐标平均
+/*
+    
+    double sum_widthL = 0;
+    double sum_heightL = 0;
+    double number = 0;
+    for (int i = 0; i < ROI_tempL.size().width; i++)
+	{
+			uchar* pdata = ROI_tempL.ptr<uchar>(i);
+			for (int j = 0; j < ROI_tempL.size().height; j++)
+			{
+				if( pdata[j] <= 100){
+                    sum_widthL += i;
+                    sum_heightL += j;
+                    number++;
+                }
+			}
+	}
+    dX = sum_widthL / number;
+    dY = sum_heightL / number;
+    cout << dX << endl;
+    cout << dY << endl;
+
+    double sum_widthR = 0;
+    double sum_heightR = 0;
+    double numberR = 0;
+    for (int i = 0; i < ROI_tempR.size().width; i++)
+	{
+			uchar* pdata = ROI_tempR.ptr<uchar>(i);
+			for (int j = 0; j < ROI_tempR.size().height; j++)
+			{
+				if( pdata[j] <= 100){
+                    sum_widthR += i;
+                    sum_heightR += j;
+                    numberR++;
+                }
+			}
+	}
+    dX_R = sum_widthR / numberR;
+    dY_R = sum_heightR / numberR;
+    cout << dX_R << endl;
+    cout << dY_R << endl;
+*/
+
+ 
 
 /******************findCirclesGrid测试代码
             vector<Point2f> centersL, centersR; //this will be filled by the detected centers
@@ -187,7 +253,7 @@ void findRealcenters(
             waitKey(0);
 ******************************************/
 
-/******************findContours测试代码
+//******************findContours测试代码
             vector<Vec4i>  hierarchy;
             findContours(ROI_tempL, contoursL, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_NONE);//找轮廓
             Mat imageContoursL=Mat::zeros(ROI_tempL.size(),CV_8UC1);
@@ -201,20 +267,20 @@ void findRealcenters(
                 if (area > 4900) marker_contoursL = contoursL.at(i);
             }
             //计算矩来计算中心
-            //Moments mu = moments(marker_contoursL, false);
-            //float dX = mu.m10/mu.m00;
-            //float dY = mu.m01/mu.m00;
-            //cout << "x, y is " << Mat(Point(dX, dY)) << endl;
+            Moments mu = moments(marker_contoursL, false);
+            dX = mu.m10/mu.m00;
+            dY = mu.m01/mu.m00;
+            cout << "x, y is " << Mat(Point(dX, dY)) << endl;
 
             //椭圆拟合算中心
-            RotatedRect ellipseL = fitEllipse(marker_contoursL);
+/*            RotatedRect ellipseL = fitEllipse(marker_contoursL);
             Mat image_ellipseL = Mat::zeros(ROI_tempL.size(), CV_8UC3);
             ellipse(image_ellipseL, ellipseL, Scalar(255),1, CV_AA);
-            float dX = ellipseL.center.x;
-            float dY = ellipseL.center.y;
+            dX = ellipseL.center.x;
+            dY = ellipseL.center.y;
             cout << "x, y is " << Mat(Point(dX, dY)) << endl;
             imshow("ROI_tempL", image_ellipseL);
-
+ */
             findContours(ROI_tempR, contoursR, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_NONE);//找轮廓
             Mat imageContoursR=Mat::zeros(ROI_tempR.size(), CV_8UC1);
 
@@ -225,21 +291,23 @@ void findRealcenters(
                 cout << "area is " << area << endl;
                 if (area > 4900) marker_contoursR = contoursR.at(i);//阈值不对，注意
             }
-            //Moments muR = moments(marker_contoursR, false);
-            //float dX_R  = muR.m10/muR.m00;
-            //float dY_R = muR.m01/muR.m00;
-            //cout << "xR, yR is " << Mat(Point(dX_R, dY_R)) << endl;
+           
+            Moments muR = moments(marker_contoursR, false);
+            dX_R  = muR.m10/muR.m00;
+            dY_R = muR.m01/muR.m00;
+            cout << "xR, yR is " << Mat(Point(dX_R, dY_R)) << endl;
 
             //RotatedRect ellipseR = fitEllipse(marker_contoursR);
             //Mat image_ellipseR = Mat::zeros(ROI_tempR.size(), CV_8UC3);
             //ellipse(image_ellipseR, ellipseR, Scalar(255),1, CV_AA);
             //imshow("ROI_tempR", image_ellipseR);
 //******************************************/
+
     //坐标矫正
     X = X -75 + dX;
-    X_R = X_R -75 + dX_R;
-    Y = Y -80 + dY;
-    Y_R = Y_R -80 + dY_R;
+    X_R = X_R - 75 + dX_R;
+    Y = Y - 80 + dY;
+    Y_R = Y_R - 80 + dY_R;
           
 }
 
@@ -281,21 +349,8 @@ int main(int argc, char** argv)
 {
 	Mat image_left, image_right, tempL, tempR, image_left_visial, image_right_visial;
 
-    //相机标定结果2coeff
- /*   Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7428.2467268254,	0,              	0,
-                                                0,              	7427.535411212, 	0,
-                                                1401.9402721135,    966.2408611018,	    1);
-
-    Mat cameraMatrix_R = (Mat_<double>(3, 3) << 7329.90147076187,	0,         	        0,
-                                                0,	                7330.9969844233,	0,
-                                                1364.908983579, 	1096.3907663372,   	1);
-
-    Mat rotation = (Mat_<double>(3, 3) << 0.9998543546,	-0.0124307944,	-0.0116937953,
-                                        0.0130298952,	0.9985288631,	0.0526339371,
-                                        0.0110223105,	-0.0527786401,	0.998545404);
-
-    Mat translation = (Mat_<double>(3, 1) << -626.4863650518,	6.9826191261,	-38.2149064922);
-*/
+ 
+/*
     //相机标定结果3coeff
     Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7439.1449067652,	0,	                0,
                                                 0,	                7437.6255516057,	0,
@@ -311,60 +366,56 @@ int main(int argc, char** argv)
 
     Mat translation = (Mat_<double>(3, 1) << -626.5672011742,	7.0094879625,	-41.344391405);
 
+   //相机标定结果2coeff
+   Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7428.2467268254,	0,              	0,
+                                                0,              	7427.535411212, 	0,
+                                                1401.9402721135,    966.2408611018,	    1);
 
-/*
-    //相机标定结果2coeff_tang
-    Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7419.6344032975,	0,	0,
-                                                0,	7426.0948752216,	0,
-                                                1503.9200203138,	1276.9401955205,	1);
+    Mat cameraMatrix_R = (Mat_<double>(3, 3) << 7329.90147076187,	0,         	        0,
+                                                0,	                7330.9969844233,	0,
+                                                1364.908983579, 	1096.3907663372,   	1);
 
-    Mat cameraMatrix_R = (Mat_<double>(3, 3) << 7304.4590546088,	0,	0,
-                                                0,	7310.6487560616,	0,
-                                                1371.535135567,	1318.9848091805,	1);
+    Mat rotation = (Mat_<double>(3, 3) << 0.9998543546,	-0.0124307944,	-0.0116937953,
+                                        0.0130298952,	0.9985288631,	0.0526339371,
+                                        0.0110223105,	-0.0527786401,	0.998545404);
 
-    Mat rotation = (Mat_<double>(3, 3) << 0.9996439996,	-0.0101688916,	-0.0246671387,
-                                            0.011183332,	0.9990824642,	0.0413420234,
-                                            0.0242241032,	-0.0416031664,	0.9988405125);
-
-    Mat translation = (Mat_<double>(3, 1) << -625.0329294683,	7.7090590207,	-42.2618772565);
-
-    //相机标定结果2coeff_tang+skew
-    Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7464.9352329183,	40.4091065701,	    1818.5330168797,
-                                                0,	                7465.6081382331,	1383.8527966054,
-                                                0,	                0,	                   1);
-
-    Mat cameraMatrix_R = (Mat_<double>(3, 3) << 7344.34068362847,	38.5756634932,	    1582.6595267309,
-                                                0,	                7342.6530413198,	1399.9973531205,
-                                                0,	                0,	                1);
-
-    Mat rotation = (Mat_<double>(3, 3) << 0.9992262817,	-0.0083102752,	-0.0384418682,
-                                        0.0097792163,	0.999222904,	0.0381831777,
-                                        0.0380946825,	-0.038529566,	0.998531055);
-
-    Mat translation = (Mat_<double>(3, 1) << -625.2470674697,	 7.6217840851,	-61.3736062666);
-    Mat R1, R2, P1, P2, Q;
-    Mat distCoeffs_L = (Mat_<double>(4, 1) << -0.037, -2.023, 0.017, 0.015);
-    Mat distCoeffs_R = (Mat_<double>(4, 1) << 0.07, -1.59, 0.015, 0.01);
-
-    //stereoRectify(cameraMatrix_L, distCoeffs_L, cameraMatrix_R, distCoeffs_R, Size(2448, 2048), rotation, translation, R1, R2, P1, P2, Q);
-    //cout << P1 << "\n" << P2 << "\n" << endl;
+    Mat translation = (Mat_<double>(3, 1) << -626.4863650518,	6.9826191261,	-38.2149064922);
 */
 
+    //新相机标定结果3coeff 剔除误差
+    Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7841.0384836509,	0,	0,
+                                                0,	7812.0266528615,	0,
+                                                1294.0280524123,	1181.0841489902,	1);
+
+    Mat cameraMatrix_R = (Mat_<double>(3, 3) << 7763.8253620761,	0,	0,
+                                                0,	7721.7607676568,	0,
+                                                1154.177708236,	945.6251049212,	1);
+
+    Mat rotation = (Mat_<double>(3, 3) << 0.999634448,	-0.0129989519,	-0.0237064908,
+                                            0.013086313,	0.9999081265,	0.0035337015,
+                                            0.0236583784,	-0.0038426403,	0.9997127164);
+
+    Mat translation = (Mat_<double>(3, 1) << -622.7266416748,	2.0965186942,	3.1009756712);
+
+
+    
 
 
 
 
     
 
-    for (int count = 1; count <= 8; count++)    //need change
+    for (int count = 1; count <= 11; count++)    //need change
 	{
         //读入图片并灰度化
-		sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/left cam/%d-1.bmp", count); 
+		sprintf(filename, "/home/jack/Desktop/cv_project/1213/left/%d-1.bmp", count); 
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/left cam/%d-1.bmp", count); 
 		image_left = imread(filename, 1);
         cout << image_left.size() << endl;
         cvtColor(image_left, tempL, CV_RGB2GRAY);
 
-        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/right cam/%d-1.bmp", count);   //need change
+        sprintf(filename, "/home/jack/Desktop/cv_project/1213/right/%d-1.bmp", count);   //need change
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/right cam/%d-1.bmp", count); 
 		image_right = imread(filename, 1);   
         cvtColor(image_right, tempR, CV_RGB2GRAY);
 
@@ -377,10 +428,10 @@ int main(int argc, char** argv)
         imshow("BlurL", image_left_visial);
         imshow("BlurR", image_right_visial);
 
-        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/Gaussian/BlurL_%d.png", count);
-        imwrite(filename, image_left_visial);
-        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/Gaussian/BlurR_%d.png", count);
-        imwrite(filename, image_right_visial);
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/Gaussian/BlurL_%d.png", count);
+        //imwrite(filename, image_left_visial);
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/Gaussian/BlurR_%d.png", count);
+        //imwrite(filename, image_right_visial);
 
         //二值化使特征突出，去除干扰
         threshold(tempL, tempL, 120, 255, THRESH_BINARY);
@@ -390,10 +441,10 @@ int main(int argc, char** argv)
         imshow("BINARYL", image_left_visial);
         imshow("BINARYR", image_right_visial);
 
-        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/binary/BINARYL_%d.png", count);
-        imwrite(filename, image_left_visial);
-        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/binary/BINARYR_%d.png", count);
-        imwrite(filename, image_right_visial);
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/binary/BINARYL_%d.png", count);
+        //imwrite(filename, image_left_visial);
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/binary/BINARYR_%d.png", count);
+        //imwrite(filename, image_right_visial);
 
         //定义BLOB分析参数
         vector<KeyPoint> keypointsL, keypointsR;  
@@ -439,14 +490,14 @@ int main(int argc, char** argv)
             double Y = keypointsL[i].pt.y;
             cout << "x, y is " << X << ", " <<  Y << endl;
             cout << endl;
-            circle(image_left, Point(X, Y), 30, cv::Scalar(255, 0, 0), 3);
+            //circle(image_left, Point(X, Y), 30, cv::Scalar(255, 0, 0), 3);
 
             
             double X_R = keypointsR[i].pt.x; 
             double Y_R = keypointsR[i].pt.y;
             cout << "xR, yR is "  <<  X_R << ", " <<  Y_R  << endl;
             cout << endl;
-            circle(image_right, Point(X_R, Y_R), 30, cv::Scalar(255, 0, 0), 3);
+            //circle(image_right, Point(X_R, Y_R), 30, cv::Scalar(255, 0, 0), 3);
 
             if(abs(X - X_R) >= 1000 ) mismatch = true;//若像素值差别太大则误匹配
             else mismatch = false;
@@ -456,17 +507,26 @@ int main(int argc, char** argv)
             cout << "real x, y is " << X << ", " <<  Y << endl;
             cout << "real xR, yR is "  <<  X_R << ", " <<  Y_R  << endl;
             cout << endl;
-/*            if(count == 1 && i==1){
-                keypointsL[1].pt.x = X+0.772308;
-                keypointsL[1].pt.y = Y+0.83093; 
-                keypointsR[1].pt.x = X_R+0.868469;
-                keypointsR[1].pt.y = Y_R+1.07196;
+
+            //keypointsL[i].pt.x = X;
+            //keypointsL[i].pt.y = Y; 
+            //keypointsR[i].pt.x = X_R;
+            //keypointsR[i].pt.y = Y_R;
+
+  /*          if(count == 11 && i==1){
+                keypointsL[1].pt.x = X-2.5;
+                keypointsL[1].pt.y = Y-1.5; 
+                keypointsR[1].pt.x = X_R+0;
+                keypointsR[1].pt.y = Y_R-1;
+            }else if(count == 11 && i==0){
+                keypointsL[i].pt.x = X+2.5;
+                keypointsL[i].pt.y = Y+0.5; 
+                keypointsR[i].pt.x = X_R-0; 
+                keypointsR[i].pt.y = Y_R-0; 
+
             }
-            //keypointsL[i].pt.x = X+1.5;
-            //keypointsL[i].pt.y = Y+1.5; 
-            //keypointsR[i].pt.x = X_R-1.5; 
-            //keypointsR[i].pt.y = Y_R-1.5;  
-*/
+ */            
+
 
         }
         //三角化获得世界坐标
@@ -483,10 +543,10 @@ int main(int argc, char** argv)
 		resize(image_right, image_right_visial, Size(612, 512)); 
         imshow("result_blobR", image_right_visial);
 
-        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/blob/result_blobL_%d.png", count);
-        imwrite(filename, image_left_visial);
-        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/blob/result_blobR_%d.png", count);
-        imwrite(filename, image_right_visial);
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/blob/result_blobL_%d.png", count);
+        //imwrite(filename, image_left_visial);
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/blob/result_blobR_%d.png", count);
+        //imwrite(filename, image_right_visial);
 
         cvWaitKey(0);
     }

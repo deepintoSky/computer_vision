@@ -148,6 +148,7 @@ int main(int argc, char** argv)
 {
 	Mat image_left, image_right, tempL, tempR, image_left_visial, image_right_visial;
 
+/*
     //相机标定结果
     Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7439.1449067652,	0,	                0,
                                                 0,	                7437.6255516057,	0,
@@ -162,23 +163,39 @@ int main(int argc, char** argv)
                                         0.0104400362,	-0.0545584459,	0.9984559988);
 
     Mat translation = (Mat_<double>(3, 1) << -626.5672011742,	7.0094879625,	-41.344391405);
+*/
 
+    //新相机标定结果3coeff 剔除误差
+    Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7841.0384836509,	0,	0,
+                                                0,	7812.0266528615,	0,
+                                                1294.0280524123,	1181.0841489902,	1);
 
+    Mat cameraMatrix_R = (Mat_<double>(3, 3) << 7763.8253620761,	0,	0,
+                                                0,	7721.7607676568,	0,
+                                                1154.177708236,	945.6251049212,	1);
+
+    Mat rotation = (Mat_<double>(3, 3) << 0.999634448,	-0.0129989519,	-0.0237064908,
+                                            0.013086313,	0.9999081265,	0.0035337015,
+                                            0.0236583784,	-0.0038426403,	0.9997127164);
+
+    Mat translation = (Mat_<double>(3, 1) << -622.7266416748,	2.0965186942,	3.1009756712);
 
 
 
 
     char  filename[50];
 
-    for (int count = 1; count <= 8; count++)    //need change
+    for (int count = 1; count <= 11; count++)    //need change
 	{
         //读入图片并灰度化
-		sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/left cam/%d-1.bmp", count); 
+        sprintf(filename, "/home/jack/Desktop/cv_project/1213/left/%d-1.bmp", count); 
+		//sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/left cam/%d-1.bmp", count); 
 		image_left = imread(filename, 1);
         cout << image_left.size() << endl;
         cvtColor(image_left, tempL, CV_RGB2GRAY);
 
-        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/right cam/%d-1.bmp", count);   //need change
+        sprintf(filename, "/home/jack/Desktop/cv_project/1213/right/%d-1.bmp", count); 
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/right cam/%d-1.bmp", count);   //need change
 		image_right = imread(filename, 1);   
         cvtColor(image_right, tempR, CV_RGB2GRAY);
 
@@ -193,10 +210,10 @@ int main(int argc, char** argv)
         imshow("edgeL", image_left_visial);
         imshow("edgeR", image_right_visial);
 
-        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/canny/edgeL_%d.png", count);
-        imwrite(filename, image_left_visial);
-        sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/canny/edgeR_%d.png", count);
-        imwrite(filename, image_right_visial);
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/canny/edgeL_%d.png", count);
+        //imwrite(filename, image_left_visial);
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/canny/edgeR_%d.png", count);
+        //imwrite(filename, image_right_visial);
 
         //二值化使特征突出，去除干扰
         //threshold(tempL, tempL, 5, 255, THRESH_BINARY);
