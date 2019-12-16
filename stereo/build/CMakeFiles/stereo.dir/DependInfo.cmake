@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/jack/Desktop/C++/computer_vision/stereo/stereo_simple_debug.cpp" "/home/jack/Desktop/C++/computer_vision/stereo/build/CMakeFiles/stereo.dir/stereo_simple_debug.cpp.o"
+  "/home/jack/Desktop/C++/computer_vision/stereo/stereo.cpp" "/home/jack/Desktop/C++/computer_vision/stereo/build/CMakeFiles/stereo.dir/stereo.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

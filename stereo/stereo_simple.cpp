@@ -18,7 +18,6 @@ Point2f pixel2cam(const Point2d& p, const Mat& K)
 {
 	return Point2f
 	(
-        //(p.x - K.at<double>(0, 2) - K.at<double>(0, 1)*(p.y - K.at<double>(1, 2)) / K.at<double>(1, 1) ) / K.at<double>(0, 0), 
 		(p.x - K.at<double>(0, 2)) / K.at<double>(0, 0),
 		(p.y - K.at<double>(1, 2)) / K.at<double>(1, 1)
 	);
@@ -272,9 +271,9 @@ void Pose_analysis( const vector< Point3d >& worldPointEst){
 int main(int argc, char** argv)
 {
 	Mat image_left, image_right, tempL, tempR, image_left_visial, image_right_visial;
-
+ /*
     //相机标定结果2coeff
- /*   Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7428.2467268254,	0,              	0,
+   Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7428.2467268254,	0,              	0,
                                                 0,              	7427.535411212, 	0,
                                                 1401.9402721135,    966.2408611018,	    1);
     Mat cameraMatrix_R = (Mat_<double>(3, 3) << 7329.90147076187,	0,         	        0,

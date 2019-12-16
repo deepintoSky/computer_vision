@@ -113,31 +113,31 @@ void Blob_analysis( const Mat& tempL, const Mat& tempR, vector<KeyPoint>& keypoi
 void Pose_analysis( const vector< Point3d >& worldPointEst){
     
     //球门法向量
-    float n_x = worldPointEst[0].x - worldPointEst[1].x;
-    float n_y = worldPointEst[0].y - worldPointEst[1].y;
-    float n_z = worldPointEst[0].z - worldPointEst[1].z;
+    double n_x = worldPointEst[0].x - worldPointEst[1].x;
+    double n_y = worldPointEst[0].y - worldPointEst[1].y;
+    double n_z = worldPointEst[0].z - worldPointEst[1].z;
     Point3d n(n_x, n_y, n_z);
     Point3d ny(0, 1, 0);
     Point3d n_goal = n.cross(ny);
     cout << "normal vetor of goal = " << n_goal << "\n" << endl;
     //球门姿态角
-    float theta = atan(n_goal.x / n_goal.z);
+    double theta = atan(n_goal.x / n_goal.z);
     cout << "theta of goal = " << theta*180/3.14159 << "\n" << endl;
 
 
     //球门横向距离计算
-    float d_x = pow( n_x, 2);
-    //float d_y = pow( n_y, 2);
-    float d_y = 0;
-    float d_z = pow( n_z, 2);
-    float d = sqrt( d_x + d_y + d_z );
+    double d_x = pow( n_x, 2);
+    //double d_y = pow( n_y, 2);
+    double d_y = 0;
+    double d_z = pow( n_z, 2);
+    double d = sqrt( d_x + d_y + d_z );
     cout << "distance between A and B = " << d << "\n" << endl;
 
     //球门横梁中心与相机坐标系距离计算
-    float g_x = pow( (worldPointEst[0].x + worldPointEst[1].x)/2, 2);
-    float g_y = pow( (worldPointEst[0].y + worldPointEst[1].y)/2, 2);
-    float g_z = pow( (worldPointEst[0].z + worldPointEst[1].z)/2, 2);
-    float dg = sqrt( g_x + g_y + g_z );
+    double g_x = pow( (worldPointEst[0].x + worldPointEst[1].x)/2, 2);
+    double g_y = pow( (worldPointEst[0].y + worldPointEst[1].y)/2, 2);
+    double g_z = pow( (worldPointEst[0].z + worldPointEst[1].z)/2, 2);
+    double dg = sqrt( g_x + g_y + g_z );
     cout << "distance between goal and camera = " << dg << "\n" << endl;
 
 }
@@ -148,22 +148,6 @@ int main(int argc, char** argv)
 {
 	Mat image_left, image_right, tempL, tempR, image_left_visial, image_right_visial;
 
-/*
-    //相机标定结果
-    Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7439.1449067652,	0,	                0,
-                                                0,	                7437.6255516057,	0,
-                                                1405.886966076,	    937.3362811242,	    1);
-
-    Mat cameraMatrix_R = (Mat_<double>(3, 3) << 7342.704388258,	    0,	                0,
-                                                0,	                7343.6607746441,	0,
-                                                1372.6677103634,	1081.5986501337,	1);
-
-    Mat rotation = (Mat_<double>(3, 3) << 0.9998598444,	-0.0124996949,	-0.0111377335,
-                                        0.0130880528,	0.998432338,	0.054420302,
-                                        0.0104400362,	-0.0545584459,	0.9984559988);
-
-    Mat translation = (Mat_<double>(3, 1) << -626.5672011742,	7.0094879625,	-41.344391405);
-*/
 
     //新相机标定结果3coeff 剔除误差
     Mat cameraMatrix_L = (Mat_<double>(3, 3) << 7841.0384836509,	0,	0,
@@ -180,7 +164,15 @@ int main(int argc, char** argv)
 
     Mat translation = (Mat_<double>(3, 1) << -622.7266416748,	2.0965186942,	3.1009756712);
 
+     //新相机标定结果2coeff 剔除误差
+    Mat rotation11 = (Mat_<double>(3, 3) << 0.999585426780172, -0.012918895796858, -0.025730851134213,
+		0.013320644153222, 0.999791075039552, 0.0155037644009375,
+		0.0255251838004028, -0.0158400884671288, 0.999548676448180);
 
+	Mat translation11 = (Mat_<double>(3, 1) << -626.282183743998, 2.75695252294966, 11.6702170037552);
+
+	Mat cameraMatrix_L11 = (Mat_<double>(3, 3) << 7.659415501692802e+03, 0, 1.247834598440359e+03, 0, 7.657339635627016e+03, 1.232085832287226e+03, 0, 0, 1);
+	Mat cameraMatrix_R11 = (Mat_<double>(3, 3) << 7.594464903367622e+03, 0, 1.101734656332642e+03, 0, 7.579663788497434e+03, 1.086257026142670e+03, 0, 0, 1);
 
 
     char  filename[50];
@@ -199,10 +191,9 @@ int main(int argc, char** argv)
 		image_right = imread(filename, 1);   
         cvtColor(image_right, tempR, CV_RGB2GRAY);
 
-        //equalizeHist(tempL, tempL);
-        //equalizeHist(tempR, tempR);
-
-        //CANNY边缘检测
+ 
+//******************处理一**************************
+        //处理一：CANNY边缘检测
         Canny(tempL, tempL, 30, 70);
         Canny(tempR, tempR, 30, 70);
         resize(tempL, image_left_visial, Size(612, 512));
@@ -214,14 +205,35 @@ int main(int argc, char** argv)
         //imwrite(filename, image_left_visial);
         //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/canny/edgeR_%d.png", count);
         //imwrite(filename, image_right_visial);
+//**************************************/
 
-        //二值化使特征突出，去除干扰
-        //threshold(tempL, tempL, 5, 255, THRESH_BINARY);
-        //threshold(tempR, tempR, 5, 255, THRESH_BINARY);
-        //resize(tempL, image_left_visial, Size(612, 512));
-        //resize(tempR, image_right_visial, Size(612, 512));
-        //imshow("BINARYL", image_left_visial);
-        //imshow("BINARYR", image_right_visial);
+/*****************处理二*********************
+        //处理二：高斯滤波平滑
+        GaussianBlur(tempL, tempL, Size(15, 15), 3, 3);
+        GaussianBlur(tempR, tempR, Size(15, 15), 3, 3);
+        resize(tempL, image_left_visial, Size(612, 512));
+        resize(tempR, image_right_visial, Size(612, 512));
+        imshow("BlurL", image_left_visial);
+        imshow("BlurR", image_right_visial);
+
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/Gaussian/BlurL_%d.png", count);
+        //imwrite(filename, image_left_visial);
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/Gaussian/BlurR_%d.png", count);
+        //imwrite(filename, image_right_visial);
+
+        //处理二：二值化使特征突出，去除干扰
+        threshold(tempL, tempL, 120, 255, THRESH_BINARY);
+        threshold(tempR, tempR, 120, 255, THRESH_BINARY);
+        resize(tempL, image_left_visial, Size(612, 512));
+        resize(tempR, image_right_visial, Size(612, 512));
+        imshow("BINARYL", image_left_visial);
+        imshow("BINARYR", image_right_visial);
+
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/left/binary/BINARYL_%d.png", count);
+        //imwrite(filename, image_left_visial);
+        //sprintf(filename, "/home/jack/Desktop/C++/computer_vision/stereo/Cv_Project3_Photos/result/right/binary/BINARYR_%d.png", count);
+        //imwrite(filename, image_right_visial);
+//********************************************/
 
         //定义BLOB分析参数
         vector<KeyPoint> keypointsL, keypointsR;  
@@ -229,15 +241,15 @@ int main(int argc, char** argv)
 
         bool mismatch = false;
         for (int i=0; i<keypointsL.size(); i++){//打印特征点并画圆
-            float X = keypointsL[i].pt.x; 
-            float Y = keypointsL[i].pt.y;
-            cout << Mat(Point(X, Y)) << endl;
+            double X = keypointsL[i].pt.x; 
+            double Y = keypointsL[i].pt.y;
+            cout << "x, y is " << X << ", " <<  Y << endl;
             cout << endl;
             circle(image_left, Point(X, Y), 40, cv::Scalar(255, 0, 0), 3);
 
-            float X_R = keypointsR[i].pt.x; 
-            float Y_R = keypointsR[i].pt.y;
-            cout << Mat(Point(X_R, Y_R)) << endl;
+            double X_R = keypointsR[i].pt.x; 
+            double Y_R = keypointsR[i].pt.y;
+            cout << "xR, yR is "  <<  X_R << ", " <<  Y_R  << endl;
             cout << endl;
             circle(image_right, Point(X_R, Y_R), 40, cv::Scalar(255, 0, 0), 3);
 
@@ -258,12 +270,14 @@ int main(int argc, char** argv)
 
         //三角化获得世界坐标
         vector< Point3d > worldPointEst;
-        triangulation(mismatch, keypointsL, keypointsR, cameraMatrix_L.t(), cameraMatrix_R.t(), rotation.inv(), -translation, worldPointEst);
-        cout << worldPointEst << "\n" << endl;
+        if(count == 11) triangulation(mismatch, keypointsL, keypointsR, cameraMatrix_L11, cameraMatrix_R11, rotation11.inv(), translation11, worldPointEst);
+        else triangulation(mismatch, keypointsL, keypointsR, cameraMatrix_L.t(), cameraMatrix_R.t(), rotation.inv(), translation, worldPointEst);
+        cout << "world x,y,z of B is "  << worldPointEst[0] << "\n" << endl;
+        cout << "world x,y,z of A is "  << worldPointEst[1] << "\n" << endl;
 
         Pose_analysis(worldPointEst);
         
-        cvWaitKey(0);
+        cvWaitKey(30);
     }
 
     cvWaitKey(0);
